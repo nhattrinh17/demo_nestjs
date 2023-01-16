@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Body, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import {
     responseCreateFailure,
     responseCreateSuccesses,
@@ -18,6 +18,7 @@ import { UserVer2Service } from './user-ver2.service';
 export class UserVer2Controller {
     constructor(private readonly userService: UserVer2Service) {}
 
+    @HttpCode(HttpStatus.CREATED)
     @Post('insert')
     async create(@Body() createUserDto: CreateUserVer2Dto) {
         if (
@@ -31,12 +32,14 @@ export class UserVer2Controller {
         }
     }
 
+    @HttpCode(HttpStatus.OK)
     @Get('list')
     async findAll() {
         const response = await this.userService.getAllUsers();
         return response.status ? responseGetDataSuccesses(response) : responseGetDataFailure(response);
     }
 
+    @HttpCode(HttpStatus.OK)
     @Get('get/:account')
     async findOne(@Param('account') account: string) {
         if (account) {
@@ -46,6 +49,7 @@ export class UserVer2Controller {
         return responseMissingData();
     }
 
+    @HttpCode(HttpStatus.OK)
     @Patch('update/:id')
     async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserVer2Dto) {
         if (id && updateUserDto.email && updateUserDto.phone) {
@@ -59,6 +63,7 @@ export class UserVer2Controller {
         return responseMissingData();
     }
 
+    @HttpCode(HttpStatus.OK)
     @Delete('delete/:id')
     async remove(@Param('id') id: string) {
         if (id) {
@@ -69,6 +74,5 @@ export class UserVer2Controller {
                 return responseDeleteFailure({ message: 'Id không hợp lệ' });
             }
         }
-        return responseMissingData();
     }
 }
