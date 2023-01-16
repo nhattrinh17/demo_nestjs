@@ -3,11 +3,12 @@ import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { CatsModule } from './cats/cats.module';
 import { UserModule } from './user/user.module';
-import { LoggerMiddleware } from './middleware/logger.middleware';
+import { loggerFunction, LoggerMiddleware } from './middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport/dist';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserVer2Module } from './user-ver2/user-ver2.module';
+import { CatsController } from './cats/cats.controller';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { UserVer2Module } from './user-ver2/user-ver2.module';
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(LoggerMiddleware).forRoutes({ path: 'cats/get', method: RequestMethod.GET });
+        // consumer.apply(LoggerMiddleware).forRoutes({ path: 'cats/get', method: RequestMethod.GET });
+        consumer.apply(LoggerMiddleware).forRoutes(CatsController);
     }
 }

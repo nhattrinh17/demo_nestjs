@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 const responseCreateSuccesses = (response) => {
-    const { message, data } = response;
-    responseHttp(data, message, HttpStatus.CREATED);
+    const { message, data = null } = response;
+    return { statusCode: HttpStatus.CREATED, timestamp: new Date().toUTCString(), message, data };
 };
 
 const responseCreateFailure = (response) => {
@@ -12,7 +12,7 @@ const responseCreateFailure = (response) => {
 
 const responseGetDataSuccesses = (response) => {
     const { message, data } = response;
-    responseHttp(data, message, HttpStatus.OK);
+    return { statusCode: HttpStatus.OK, timestamp: new Date().toUTCString(), message, data };
 };
 
 const responseGetDataFailure = (response) => {
@@ -22,7 +22,7 @@ const responseGetDataFailure = (response) => {
 
 const responseUpdateSuccesses = (response) => {
     const { message, data } = response;
-    responseHttp(data, message, HttpStatus.OK);
+    return { statusCode: HttpStatus.OK, timestamp: new Date().toUTCString(), message, data };
 };
 
 const responseUpdateFailure = (response) => {
@@ -32,7 +32,7 @@ const responseUpdateFailure = (response) => {
 
 const responseDeleteSuccesses = (response) => {
     const { message, data } = response;
-    responseHttp(data, message, HttpStatus.OK);
+    return { statusCode: HttpStatus.OK, timestamp: new Date().toUTCString(), message, data };
 };
 
 const responseDeleteFailure = (response) => {
