@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Req, Res, HttpStatus, UseInterceptors, UseGuards } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Req,
+    Res,
+    HttpStatus,
+    UseInterceptors,
+    UseGuards,
+    Param,
+    ParseIntPipe,
+} from '@nestjs/common';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
 import { Request, Response } from 'express';
@@ -24,5 +36,13 @@ export class CatsController {
         } else {
             res.status(HttpStatus.OK).json('Khong co gi');
         }
+    }
+
+    @Get('/test/:id')
+    async test(
+        @Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }))
+        id: number,
+    ) {
+        return 'OKOK';
     }
 }

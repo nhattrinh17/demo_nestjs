@@ -56,9 +56,8 @@ export class UserVer2Controller {
             if (id.match(/^[0-9a-fA-F]{24}$/)) {
                 const response = await this.userService.updateUser(id, updateUserDto);
                 return response.status ? responseUpdateSuccesses(response) : responseUpdateFailure(response);
-            } else {
-                return responseUpdateFailure({ message: 'Id không hợp lệ' });
             }
+            return responseUpdateFailure({ message: 'Id không hợp lệ' });
         }
         return responseMissingData();
     }
@@ -69,10 +68,9 @@ export class UserVer2Controller {
         if (id) {
             if (id.match(/^[0-9a-fA-F]{24}$/)) {
                 const response = await this.userService.deleteUser(id);
-                response.status ? responseDeleteSuccesses(response) : responseDeleteFailure(response);
-            } else {
-                return responseDeleteFailure({ message: 'Id không hợp lệ' });
+                return response.status ? responseDeleteSuccesses(response) : responseDeleteFailure(response);
             }
+            return responseDeleteFailure({ message: 'Id không hợp lệ' });
         }
     }
 }

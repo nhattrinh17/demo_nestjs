@@ -13,7 +13,7 @@ export class UserVer2Service {
     constructor(@InjectModel(User.name) private userModule: Model<UserDocument>) {}
 
     async createUser(createUserDto: CreateUserVer2Dto): Promise<any> {
-        const checkUser = await this.userModule.findOne({
+        const checkUser = await this.userModule.exists({
             $or: [{ phone: createUserDto.phone }, { email: createUserDto.email }],
         });
 
@@ -34,12 +34,12 @@ export class UserVer2Service {
     async getUserByAccount(account: string): Promise<any> {
         let user: UserVer2;
         if (checkEmail(account)) {
-            user = await this.userModule.findOne({ email: account });
+            user = await this.userModule.findOne({ email: account }).select('name email phone username');
         } else {
             if (!account.match(/^[0-9a-fA-F]{24}$/)) {
                 return { status: true, message: 'Id không hợp lệ' };
             }
-            user = await this.userModule.findOne({ _id: account });
+            user = await this.userModule.findOne({ _id: account }).select('name email phone username');
         }
         if (user) {
             return { status: true, message: 'Lấy dữ liệu thành công', data: user };
@@ -48,7 +48,7 @@ export class UserVer2Service {
     }
 
     async getAllUsers(): Promise<any> {
-        const allUser = await this.userModule.find();
+        const allUser = await this.userModule.find().select('name email phone username');
         if (allUser.length) {
             return { status: true, message: 'Lấy dữ liệu thành công', data: allUser };
         } else {
@@ -57,7 +57,7 @@ export class UserVer2Service {
     }
 
     async updateUser(id: string, updateUserDto: UpdateUserVer2Dto): Promise<any> {
-        const checkUser = await this.userModule.findById(id);
+        const checkUser = await this.userModule.exists({ _id: id });
         if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return { status: true, message: 'Id không hợp lệ' };
         }
@@ -76,7 +76,7 @@ export class UserVer2Service {
         if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return { status: true, message: 'Id không hợp lệ' };
         }
-        const checkUser = await this.userModule.findById(id);
+        const checkUser = await this.userModule.exists({ _id: id });
         if (checkUser) {
             return this.userModule
                 .deleteOne({ _id: id })
